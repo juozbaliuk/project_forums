@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% block title %}{% trans "New Topic" %}{% endblock %}
+
+{% block content %}
+<h1 class="mb-3">{% trans "New Topic" %}</h1>
+{{ second_form.media }}
+<form method="post" class="mb-4">
+    {% csrf_token %}
+    {% load crispy_forms_tags %}
+    <h5>{% trans "Topic" %}</h5>
+    {{ form | crispy }}
+    <h5 class="mt-3">{% trans "Post" %}</h5>
+    {{ second_form | crispy }}
+    <button type="submit" class="btn btn-primary float-end btn-lg mb-4">{% trans "Submit" %}</button>
+</form>
+{% endblock %}

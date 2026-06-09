@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{{ task.name }}{% endblock %}
+
+{% block content %}
+<h1>{{ task.name }}</h1>
+<p>{{ task.content | safe }}</p>
+{% endblock %}

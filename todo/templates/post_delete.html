@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Post Deletion" %}{% endblock %}
+{% block content %}
+<div class="content-section">
+    <form method="POST">
+        {% csrf_token %}
+        {% load crispy_forms_tags %}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">{% trans "Delete post" %}</legend>
+            <h2>{% trans "Are you sure you want to delete the post" %}?</h2>
+            <div class="form-group">
+                <button class="btn btn-danger" type="submit">{% trans "Delete" %}</button>
+                <a class="btn btn-secondary" href="{% url 'topic' post.topic.id %}">{% trans "Cancel" %}</a>
+            </div>
+        </fieldset>
+    </form>
+</div>
+{% endblock %}

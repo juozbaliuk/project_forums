@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Tasks" %}{% endblock %}
+
+{% block content %}
+<h1>{% trans "Tasks" %}</h1>
+{% for task in tasks %}
+<p><a href="{% url 'task' task.id %}">{{ task }}</a> ({{ task.datetime }})</p>
+{% endfor %}
+{% endblock %}

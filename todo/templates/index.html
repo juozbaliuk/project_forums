@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load humanize %}
+{% block title %}{% trans "Home" %}{% endblock %}
+
+{% block content %}
+<h1 class="mb-3">{% trans "Forums" %}</h1>
+{% for category in categories %}
+<table class="table table-bordered">
+  <thead>
+    <tr class="table-dark">
+      <th scope="col">
+        {{ category.name }}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for forum in category.get_forums %}
+    <tr>
+      <td>
+        <div class="row">
+          <div class="col">
+            <a href="{% url 'forum' forum.id %}">{{ forum.name }}</a>
+          </div>
+          <div class="col-1">
+            <p class="mb-1">{{ forum.get_posts_count | intword }} <span class="text-muted">posts</span></p>
+          </div>
+        </div>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endfor %}
+{% endblock %}

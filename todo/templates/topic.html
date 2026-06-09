@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% block title %}{{ topic.name }}{% endblock %}
+
+{% block content %}
+<h2><a href="{% url 'forum' topic.forum.id %}"><< {% trans "Back to" %} {{ topic.forum }}</a></h2>
+<h1 class="mb-3">{{ topic.name }}</h1>
+{% if is_paginated %}
+<ul class="pagination justify-content-center">
+    {% if page_obj.has_previous %}
+    <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+        <span class="page-link">Previous</span>
+    </li>
+    {% endif %}
+
+    {% for num in paginator.page_range %}
+    {% if page_obj.number == num %}
+    <li class="page-item active">
+        <span class="page-link">{{ num }}</span>
+    </li>
+    {% else %}
+    <li class="page-item">
+        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+    </li>
+    {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+    <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+        <span class="page-link">Next</span>
+    </li>
+    {% endif %}
+</ul>
+{% endif %}
+{% for post in posts %}
+<div class="card mb-4" id="{{ post.id }}">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-2">
+                <div class="ratio ratio-1x1">
+                    {% if post.user.photo %}
+                    <img src="{{ post.user.photo.url }}" style="width: 100%;height: 100%;object-fit: cover;">
+                    {% else %}
+                    <img src="{% static 'img/no-avatar.jpg' %}" style="width: 100%;height: 100%;object-fit: cover;">
+                    {% endif %}
+                </div>
+                <p class="card-text text-center mb-0">
+                    {{ post.user }}
+                </p>
+                <p class="card-text text-center" title="{{ post.user.count_posts }} {% trans "posts" %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-fill" viewBox="0 0 16 16">
+                        <path d="M8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6-.097 1.016-.417 2.13-.771 2.966-.079.186.074.394.273.362 2.256-.37 3.597-.938 4.18-1.234A9 9 0 0 0 8 15"/>
+                    </svg>
+                    {{ post.user.count_posts }}
+                </p>
+            </div>
+            <div class="col-1 p-0" style="width: 1%;">
+                <div class="d-flex" style="min-height: 100%;">
+                    <div class="vr"></div>
+                </div>
+            </div> 
+            <div class="col d-flex flex-column">
+                <p class="card-subtitle text-muted" title="{{ post.created_at }}">
+                    Posted {{ post.created_at | timesince }}
+                    {% if post.last_edited %}
+                    <span title="{{ post.last_edited }}">(last edited {{ post.last_edited | timesince }})</span>
+                    {% endif %}
+                </p>   
+                <p class="card-text">
+                    {{ post.content | safe }}
+                </p>
+                {% if user == post.user and not post.topic.locked or user == post.user and user.is_staff and not post.topic.locked %}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-auto">
+                        <a class="btn btn-dark float-end" href="{% url 'post_update' post.id %}">
+                            Edit Post
+                        </a>
+                        <a class="btn btn-danger float-end" href="{% url 'post_delete' post.id %}">
+                            Delete
+                        </a>
+                    </div>
+                {% elif user.is_staff and not post.topic.locked %}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-auto">
+                    <a class="btn btn-danger float-end" href="{% url 'post_delete' post.id %}">
+                        Delete
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% if is_paginated %}
+<ul class="pagination justify-content-center">
+    {% if page_obj.has_previous %}
+    <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+        <span class="page-link">Previous</span>
+    </li>
+    {% endif %}
+
+    {% for num in paginator.page_range %}
+    {% if page_obj.number == num %}
+    <li class="page-item active">
+        <span class="page-link">{{ num }}</span>
+    </li>
+    {% else %}
+    <li class="page-item">
+        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+    </li>
+    {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+    <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+        <span class="page-link">Next</span>
+    </li>
+    {% endif %}
+</ul>
+{% endif %}
+{% if user.is_authenticated and not topic.locked or user.is_staff and not topic.locked %}
+<h2>{% trans "Leave a post" %}</h2>
+<form method="post" class="mb-4">
+    {% csrf_token %}
+    {% load crispy_forms_tags %}
+    {{ form | crispy }}
+    <button type="submit" class="btn btn-primary float-end btn-lg mb-4">{% trans "Submit" %}</button>
+</form>
+{% endif %}
+{% endblock %}
