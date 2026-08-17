@@ -8,6 +8,9 @@
 <div class="row mb-3">
     <div class="col">    
         <h1>{{ forum.name }}</h1>
+        {% if forum.description %}
+        <h5>{{ forum.description }}</h5>
+        {% endif %}
     </div>
     {% if user.is_authenticated and not forum.category.staff_only or user.is_staff %}
     <div class="col-2 d-flex align-items-center justify-content-end">
@@ -39,6 +42,7 @@
     </nav>
 </div>
 {% endif %}
+{% if topics %}
 <table class="table table-bordered">
   <thead>
     <tr class="table-dark">
@@ -100,6 +104,9 @@
     {% endfor %}
   </tbody>
 </table>
+{% else %}
+<h2>No topics made. Be the first to create a topic by clicking the "New Topic" button above</h2>
+{% endif %}
 {% if topics.has_other_pages %}
 <div class="container">
     <nav aria-label="...">

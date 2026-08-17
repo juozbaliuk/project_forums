@@ -97,6 +97,11 @@
             </div>
         </div>
     </div>
+    {% if post.user.flair %}
+    <div class="card-footer bg-transparent mh-20">
+        {{ post.user.flair | safe }}
+    </div>
+    {% endif %}
 </div>
 {% endfor %}
 {% if is_paginated %}

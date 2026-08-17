@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 # Create your models here.
 class CustomUser(AbstractUser):
     photo = models.ImageField(upload_to="profile_pics", null=True, blank=True)
+    flair = HTMLField(verbose_name=_("Flair"), max_length=3000, default="")
     
     def count_posts(self):
         return Post.objects.filter(user=self.id).count()

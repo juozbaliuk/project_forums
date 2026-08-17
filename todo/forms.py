@@ -4,9 +4,10 @@ from tinymce.widgets import TinyMCE
 from django.contrib.auth.forms import UserCreationForm
 
 class UserChangeForm(forms.ModelForm):
+    flair = forms.CharField(widget=TinyMCE())
     class Meta:
         model = CustomUser
-        fields = ['first_name', 'last_name', 'email', 'photo']
+        fields = ['username', 'email', 'photo', 'flair']
 
 class CustomUserCreateForm(UserCreationForm):
     class Meta:
@@ -23,8 +24,3 @@ class TopicForm(forms.ModelForm):
     class Meta:
         model = Topic
         fields = ['name']
-        
-class UserChangeForm(forms.ModelForm):
-    class Meta:
-        model = CustomUser
-        fields = ['username', 'email', 'photo']

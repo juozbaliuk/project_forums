@@ -17,7 +17,7 @@ class TaskAdmin(admin.ModelAdmin):
 
 class CustomUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
-        (_("Additional info"), {"fields": ("photo", )}),
+        (_("Additional info"), {"fields": ("photo", "flair", )}),
     )
     
 class ForumAdmin(admin.ModelAdmin):
